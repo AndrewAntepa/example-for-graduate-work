@@ -5,9 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.Ad;
+import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.service.AdService;
@@ -35,8 +34,8 @@ public class AdController {
                 @ApiResponse(responseCode = "201", description = "Created"),
                 @ApiResponse(responseCode = "400", description = "Some fields haven't passed validation"),
                 @ApiResponse(responseCode = "401", description = "Unauthorized") })
-    public Ad addAd(@RequestBody CreateOrUpdateAd ad, @RequestBody String image) {
-        return new Ad();
+    public AdDTO addAd(@RequestBody CreateOrUpdateAd ad, @RequestBody String image) {
+        return new AdDTO();
     }
 
     @GetMapping("/{id}")
@@ -46,8 +45,8 @@ public class AdController {
                 @ApiResponse(responseCode = "200", description = "OK"),
                 @ApiResponse(responseCode = "401", description = "Unauthorized"),
                 @ApiResponse(responseCode = "404", description = "Not found")})
-    public Ad getAd(@PathVariable int id) {
-        return new Ad();
+    public AdDTO getAd(@PathVariable int id) {
+        return new AdDTO();
     }
 
     @DeleteMapping("/{id}")

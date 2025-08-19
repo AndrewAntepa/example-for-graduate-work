@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
-import ru.skypro.homework.dto.User;
+import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.service.UserService;
 
 @RestController
@@ -35,8 +35,8 @@ public class UserController {
                 @ApiResponse(responseCode = "200", description = "OK"),
                 @ApiResponse(responseCode = "401", description = "Unauthorized")
         })
-    public User getMe(){
-        return new User();
+    public UserDTO getMe(){
+        return new UserDTO();
     }
 
     @PatchMapping("/me")

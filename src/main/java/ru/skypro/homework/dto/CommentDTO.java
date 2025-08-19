@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class Comment {
+public class CommentDTO {
     @Schema(description = "id автора комментария")
     private int author;
     @Schema(description = "ссылка на аватар автора комментария")

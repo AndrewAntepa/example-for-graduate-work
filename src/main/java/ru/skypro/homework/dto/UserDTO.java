@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class User {
+public class UserDTO {
     @Schema(description = "id пользователя")
     private int id;
     @Schema(description = "email пользователя")
