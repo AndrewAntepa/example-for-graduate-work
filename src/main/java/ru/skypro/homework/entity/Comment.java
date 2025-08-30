@@ -1,16 +1,11 @@
 package ru.skypro.homework.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
 public class Comment {
     @NotNull
     private int author;
@@ -32,6 +27,56 @@ public class Comment {
         this.authorFirstName = authorFirstName;
         this.createdAt = createdAt;
         this.pk = pk;
+        this.text = text;
+    }
+
+    @NotNull
+    public int getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(@NotNull int author) {
+        this.author = author;
+    }
+
+    public @NotNull String getAuthorImage() {
+        return authorImage;
+    }
+
+    public void setAuthorImage(@NotNull String authorImage) {
+        this.authorImage = authorImage;
+    }
+
+    public @NotNull String getAuthorFirstName() {
+        return authorFirstName;
+    }
+
+    public void setAuthorFirstName(@NotNull String authorFirstName) {
+        this.authorFirstName = authorFirstName;
+    }
+
+    public @NotNull Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(@NotNull Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @NotNull
+    public int getPk() {
+        return pk;
+    }
+
+    public void setPk(@NotNull int pk) {
+        this.pk = pk;
+    }
+
+    public @NotNull String getText() {
+        return text;
+    }
+
+    public void setText(@NotNull String text) {
         this.text = text;
     }
 
