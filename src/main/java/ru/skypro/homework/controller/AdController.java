@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.Ads;
@@ -13,10 +12,13 @@ import ru.skypro.homework.service.AdService;
 
 @RestController
 @RequestMapping("/ads")
-@RequiredArgsConstructor
 @Schema(description = "Объявления")
 public class AdController {
     private final AdService adService;
+
+    public AdController(AdService adService) {
+        this.adService = adService;
+    }
 
     @GetMapping
     @Operation(summary = "Get all ads", description = "получение всех объявлений")

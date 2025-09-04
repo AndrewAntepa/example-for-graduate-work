@@ -2,8 +2,12 @@ package ru.skypro.homework.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
+@Getter
+@Setter
 public class ExtendedAdDTO {
     @Schema(description = "id объявления")
     private int pk;
@@ -23,4 +27,18 @@ public class ExtendedAdDTO {
     private int price;
     @Schema(description = "заголовок объявления")
     private String title;
+
+    public ExtendedAdDTO() {}
+
+    public ExtendedAdDTO(String title, int price, String phone, String image, String email, String description, String authorLastName, String authorFirstName, int pk) {
+        this.title = title;
+        this.price = price;
+        this.phone = phone;
+        this.image = image;
+        this.email = email;
+        this.description = description;
+        this.authorLastName = authorLastName;
+        this.authorFirstName = authorFirstName;
+        this.pk = pk;
+    }
 }

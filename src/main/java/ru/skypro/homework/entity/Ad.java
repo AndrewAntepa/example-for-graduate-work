@@ -1,18 +1,11 @@
 package ru.skypro.homework.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jdk.internal.javac.NoPreview;
-import lombok.Getter;
-import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Getter
-@Setter
 public class Ad {
     @NotNull
     private int author;
@@ -35,4 +28,47 @@ public class Ad {
     }
 
     public Ad() {}
+
+    @NotNull
+    public int getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(@NotNull int author) {
+        this.author = author;
+    }
+
+    public @NotNull String getImage() {
+        return image;
+    }
+
+    public void setImage(@NotNull String image) {
+        this.image = image;
+    }
+
+    @NotNull
+    public int getPk() {
+        return pk;
+    }
+
+    public void setPk(@NotNull int pk) {
+        this.pk = pk;
+    }
+
+    @NotNull
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(@NotNull int price) {
+        this.price = price;
+    }
+
+    public @NotNull String getTitle() {
+        return title;
+    }
+
+    public void setTitle(@NotNull String title) {
+        this.title = title;
+    }
 }
