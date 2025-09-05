@@ -1,19 +1,20 @@
 package ru.skypro.homework.entity;
 
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import ru.skypro.homework.dto.Role;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotNull
+    @Column(unique = true)
     private String email;
     @NotNull
     private String firstName;
@@ -22,13 +23,15 @@ public class User {
     @NotNull
     private String phone;
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Role role;
-    private String image;
+        @Column(name = "image", columnDefinition="BYTEA")
+    private byte[] image;
+
     @NotNull
     private String password;
 
-    public User(int id, String email, String firstName, String lastName, String phone, Role role, String image, String password) {
-        this.id = id;
+    public User(String email, String firstName, String lastName, String phone, Role role, byte[] image, String password) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -89,11 +92,11 @@ public class User {
         this.role = role;
     }
 
-    public @NotNull String getImage() {
+    public @NotNull byte[] getImage() {
         return image;
     }
 
-    public void setImage(@NotNull String image) {
+    public void setImage(@NotNull byte[] image) {
         this.image = image;
     }
 
@@ -104,4 +107,5 @@ public class User {
     public void setPassword(@NotNull String password) {
         this.password = password;
     }
+
 }

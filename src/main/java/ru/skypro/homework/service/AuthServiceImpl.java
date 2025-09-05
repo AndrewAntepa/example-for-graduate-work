@@ -16,7 +16,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder encoder;
-    private final UserRepository userRepository; // для регистрации
+    private final UserRepository userRepository;
 
     public AuthServiceImpl(UserDetailsService userDetailsService,
                            PasswordEncoder passwordEncoder,
@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         log.info("register: {}", register.getUsername());
         user.setEmail(register.getUsername());
-        user.setPassword(encoder.encode(register.getPassword())); // шифруем пароль
+        user.setPassword(encoder.encode(register.getPassword()));
         user.setRole(register.getRole());
         user.setFirstName(register.getFirstName());
         user.setLastName(register.getLastName());

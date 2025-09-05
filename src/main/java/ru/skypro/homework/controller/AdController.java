@@ -12,6 +12,11 @@ import ru.skypro.homework.service.AdService;
 
 @RestController
 @RequestMapping("/ads")
+@CrossOrigin(
+        origins = "http://localhost:3000",
+        allowedHeaders = "*",
+        methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS }
+)
 @Schema(description = "Объявления")
 public class AdController {
     private final AdService adService;
