@@ -19,10 +19,10 @@ import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.service.UserService;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @CrossOrigin(
         origins = "http://localhost:3000",
-        allowedHeaders = "*",
+        allowedHeaders = "**",
         methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS }
 )
 @Schema(description = "Контроллер для работы с пользователями")
@@ -54,10 +54,9 @@ public class UserController {
                 @ApiResponse(responseCode = "200", description = "OK"),
                 @ApiResponse(responseCode = "401", description = "Unauthorized")
         })
-    public UserDTO getMe(){
-        User user = authenticationFacade.getCurrentUser();
-        log.info("User {}", user);
-        return UserMapper.INSTANCE.userToUserDto(user);
+    public ResponseEntity<UserDTO> getMe() {
+        UserDTO userDTO = userService.getCurrentUserDto();
+        return ResponseEntity.ok(userDTO);
     }
 
     @PatchMapping("/me")
@@ -86,6 +85,19 @@ public class UserController {
     @Operation(summary = "Get user image", description = "Получение аватара авторизованного пользователя")
     public ResponseEntity<byte[]> getImage() {
         byte[] image = userService.getUserImage();
+        if (image == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(image);
+    }
+
+    @GetMapping(value = "/{id}/image", produces = MediaType.IMAGE_JPEG_VALUE)
+    @Operation(summary = "Get user image by id", description = "Получение аватара пользователя по id")
+    public ResponseEntity<byte[]> getUserImage(@PathVariable Integer id) {
+        byte[] image = userService.getUserImageById(id);
+        if (image == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(image);
     }
 

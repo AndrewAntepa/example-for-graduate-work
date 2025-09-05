@@ -23,12 +23,12 @@ public class UserDTO {
     @Schema(description = "роль пользователя")
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Schema(description = "ссылка на аватар пользователя")
-    private byte[] image;
+    @Schema(description = "аватар пользователя")
+    private String image;
 
     public UserDTO() {}
 
-    public UserDTO(int id, String email, String firstName, String lastName, String phone, Role role, byte[] image) {
+    public UserDTO(int id, String email, String firstName, String lastName, String phone, Role role, String image) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;

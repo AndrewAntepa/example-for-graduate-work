@@ -11,13 +11,16 @@ import ru.skypro.homework.entity.User;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 @Service
 public class UserService {
     Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
-    private final AuthenticationFacade authenticationFacade; // компонент для получения текущего пользователя
+    private final AuthenticationFacade authenticationFacade;
 
     public UserService(UserRepository userRepository, AuthenticationFacade authenticationFacade) {
         this.userRepository = userRepository;
@@ -25,16 +28,36 @@ public class UserService {
     }
 
     public void updateUserImage(MultipartFile file) {
-        User user = authenticationFacade.getCurrentUser(); // например, через SecurityContextHolder
+        User user = authenticationFacade.getCurrentUser();
 
         try {
             if (file == null || file.isEmpty()) {
                 throw new RuntimeException("Файл не выбран или пустой");
             }
-            user.setImage(file.getBytes());
+
+            BufferedImage originalImage = ImageIO.read(file.getInputStream());
+            if (originalImage == null) {
+                throw new RuntimeException("Неверный формат изображения");
+            }
+
+            int targetWidth = 300;
+            int targetHeight = 300;
+
+            Image scaledInstance = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+            BufferedImage scaledImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+
+            Graphics2D g2d = scaledImage.createGraphics();
+            g2d.drawImage(scaledInstance, 0, 0, null);
+            g2d.dispose();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(scaledImage, "jpg", baos);
+            byte[] scaledBytes = baos.toByteArray();
+
+            user.setImage(scaledBytes);
             userRepository.save(user);
-            byte[] bytes = file.getBytes();
-            log.info("Изображение пользователя {} обновлено, размер: {} байт", user.getEmail(), bytes.length);
+
+            log.info("Изображение пользователя {} обновлено, новый размер: {} байт", user.getEmail(), scaledBytes.length);
 
         } catch (IOException e) {
             throw new RuntimeException("Ошибка сохранения изображения", e);
@@ -46,9 +69,35 @@ public class UserService {
         return user.getImage();
     }
 
+    public UserDTO getCurrentUserDto() {
+        User user = authenticationFacade.getCurrentUser();
+        UserDTO dto = UserMapper.INSTANCE.userToUserDto(user);
+
+        if (user.getImage() != null) {
+            dto.setImage("/users/me/image");
+        }
+
+        return dto;
+    }
+
     public UserDTO getUserById(Integer id) {
         User user = userRepository.findById(id).orElse(null);
-        return UserMapper.INSTANCE.userToUserDto(user);
+        if (user == null) {
+            return null;
+        }
+
+        UserDTO dto = UserMapper.INSTANCE.userToUserDto(user);
+
+        if (user.getImage() != null) {
+            dto.setImage("/users/" + user.getId() + "/image");
+        }
+
+        return dto;
+    }
+
+    public byte[] getUserImageById(Integer id) {
+        User user = userRepository.findById(id).orElse(null);
+        return user != null ? user.getImage() : null;
     }
 
     public UpdateUser updateUser(UpdateUser updateUser) {
@@ -63,4 +112,6 @@ public class UserService {
             return null;
         }
     }
+
+
 }
