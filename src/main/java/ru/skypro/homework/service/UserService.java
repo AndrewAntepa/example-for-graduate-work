@@ -2,9 +2,11 @@ package ru.skypro.homework.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.component.AuthenticationFacade;
+import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.entity.User;
@@ -21,10 +23,12 @@ public class UserService {
     Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
+    private final PasswordEncoder encoder;
 
-    public UserService(UserRepository userRepository, AuthenticationFacade authenticationFacade) {
+    public UserService(UserRepository userRepository, AuthenticationFacade authenticationFacade, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.authenticationFacade = authenticationFacade;
+        this.encoder = encoder;
     }
 
     public void updateUserImage(MultipartFile file) {
@@ -111,6 +115,15 @@ public class UserService {
         } else {
             return null;
         }
+    }
+
+    public void changePassword (NewPassword newPassword){
+        User user = authenticationFacade.getCurrentUser();
+//        if(!encoder.matches(newPassword.getCurrentPassword(), user.getPassword())){
+//            throw new RuntimeException("Неверный текущий пароль");
+//        }
+        user.setPassword(encoder.encode(newPassword.getNewPassword()));
+        userRepository.save(user);
     }
 
 

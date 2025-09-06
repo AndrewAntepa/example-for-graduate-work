@@ -4,11 +4,26 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
+import ru.skypro.homework.entity.Ad;
+import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.service.AdService;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/ads")
@@ -27,8 +42,8 @@ public class AdController {
 
     @GetMapping
     @Operation(summary = "Get all ads", description = "получение всех объявлений")
-    public Ads getAllAds() {
-        return new Ads();
+    public List<Ad> getAllAds() {
+        return adService.getAllAds();
     }
 
     @PostMapping
@@ -41,8 +56,22 @@ public class AdController {
                 @ApiResponse(responseCode = "201", description = "Created"),
                 @ApiResponse(responseCode = "400", description = "Some fields haven't passed validation"),
                 @ApiResponse(responseCode = "401", description = "Unauthorized") })
-    public AdDTO addAd(@RequestBody CreateOrUpdateAd ad, @RequestBody String image) {
-        return new AdDTO();
+    public ResponseEntity<AdDTO> addAd(
+            @RequestPart("ad") CreateOrUpdateAd createOrUpdateAd,
+            @RequestPart("image") MultipartFile image
+    ) {
+        Ad saved = adService.addAd(createOrUpdateAd, image);
+        AdDTO adDTO = AdMapper.INSTANCE.adToAdDto(saved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(adDTO);
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable int id) {
+        Ad ad = adService.getAdById(id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(ad.getImage());
     }
 
     @GetMapping("/{id}")
@@ -103,5 +132,6 @@ public class AdController {
             }
     )
     public void updateImage(@PathVariable int id, @RequestBody String image) {
+
     }
 }

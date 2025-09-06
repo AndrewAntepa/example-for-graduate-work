@@ -10,12 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.component.AuthenticationFacade;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.UserDTO;
-import ru.skypro.homework.entity.User;
-import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.service.UserService;
 
 @RestController
@@ -29,14 +26,12 @@ import ru.skypro.homework.service.UserService;
 public class UserController {
     Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
-    private final AuthenticationFacade authenticationFacade;
 
-    public UserController(UserService userService, AuthenticationFacade authenticationFacade) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.authenticationFacade = authenticationFacade;
     }
 
-    @PatchMapping("/set_password")
+    @PostMapping("/set_password")
     @Operation(summary = "Set new password", description = "Обновление пароля",
         parameters = @Parameter(name = "newPassword", description = "new password"),
         responses = {
@@ -44,8 +39,9 @@ public class UserController {
                 @ApiResponse(responseCode = "400", description = "Some fields haven't passed validation"),
                 @ApiResponse(responseCode = "401", description = "Unauthorized")
         })
-    public void setNewPassword(@RequestBody NewPassword newPassword){
-
+    public ResponseEntity<?> setNewPassword(@RequestBody NewPassword newPassword){
+        userService.changePassword(newPassword);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
