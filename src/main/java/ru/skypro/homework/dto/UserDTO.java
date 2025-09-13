@@ -1,6 +1,7 @@
 package ru.skypro.homework.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +21,9 @@ public class UserDTO {
     @Schema(description = "телефон", pattern = "\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}")
     private String phone;
     @Schema(description = "роль пользователя")
+    @Enumerated(EnumType.STRING)
     private Role role;
-    @Schema(description = "ссылка на аватар пользователя")
+    @Schema(description = "аватар пользователя")
     private String image;
 
     public UserDTO() {}

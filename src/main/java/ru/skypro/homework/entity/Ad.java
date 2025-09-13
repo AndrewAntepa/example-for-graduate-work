@@ -1,28 +1,28 @@
 package ru.skypro.homework.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Ad {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer pk;
     @NotNull
     private int author;
     @NotNull
-    private String image;
-    @Id
-    @NotNull
-    private int pk;
+    @Lob
+    @Column(name = "image", columnDefinition = "bytea")
+    private byte[] image;
     @NotNull
     private int price;
-    @NotNull
+    @Column(nullable = false)
     private String title;
 
-    public Ad(int author, String image, int pk, int price, String title) {
+    public Ad(int author, byte[] image, int price, String title) {
         this.author = author;
         this.image = image;
-        this.pk = pk;
         this.price = price;
         this.title = title;
     }
@@ -38,21 +38,17 @@ public class Ad {
         this.author = author;
     }
 
-    public @NotNull String getImage() {
+    public @NotNull byte[] getImage() {
         return image;
     }
 
-    public void setImage(@NotNull String image) {
+    public void setImage(@NotNull byte[] image) {
         this.image = image;
     }
 
     @NotNull
     public int getPk() {
         return pk;
-    }
-
-    public void setPk(@NotNull int pk) {
-        this.pk = pk;
     }
 
     @NotNull
