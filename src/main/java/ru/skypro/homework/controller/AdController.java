@@ -42,7 +42,7 @@ public class AdController {
 
     @GetMapping
     @Operation(summary = "Get all ads", description = "получение всех объявлений")
-    public List<Ad> getAllAds() {
+    public List<AdDTO> getAllAds() {
         return adService.getAllAds();
     }
 
@@ -57,21 +57,20 @@ public class AdController {
                 @ApiResponse(responseCode = "400", description = "Some fields haven't passed validation"),
                 @ApiResponse(responseCode = "401", description = "Unauthorized") })
     public ResponseEntity<AdDTO> addAd(
-            @RequestPart("ad") CreateOrUpdateAd createOrUpdateAd,
-            @RequestPart("image") MultipartFile image
+            @RequestPart("properties") CreateOrUpdateAd dto,
+            @RequestPart(value = "image", required = false) MultipartFile image
     ) {
-        Ad saved = adService.addAd(createOrUpdateAd, image);
-        AdDTO adDTO = AdMapper.INSTANCE.adToAdDto(saved);
-        return ResponseEntity.status(HttpStatus.CREATED).body(adDTO);
+        Ad ad = adService.addAd(dto, image);
+        return ResponseEntity.status(HttpStatus.CREATED).body(AdMapper.INSTANCE.adToAdDto(ad));
     }
 
     @GetMapping("/{id}/image")
     public ResponseEntity<byte[]> getImage(@PathVariable int id) {
         Ad ad = adService.getAdById(id);
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(ad.getImage());
+        if (ad.getImage() == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(ad.getImage());
     }
 
     @GetMapping("/{id}")
@@ -114,8 +113,8 @@ public class AdController {
             responses = {
                 @ApiResponse(responseCode = "200", description = "OK"),
                 @ApiResponse(responseCode = "401", description = "Unauthorized")})
-    public Ads getMyAds() {
-        return new Ads();
+    public List<AdDTO> getMyAds() {
+        return adService.getAllAds();
     }
 
     @PatchMapping("/{id}/image")

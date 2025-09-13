@@ -1,25 +1,23 @@
 package ru.skypro.homework.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Ad {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer pk;
     @NotNull
     private int author;
     @NotNull
+    @Lob
+    @Column(name = "image", columnDefinition = "bytea")
     private byte[] image;
-    @Id
-    @NotNull
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int pk;
     @NotNull
     private int price;
-    @NotNull
+    @Column(nullable = false)
     private String title;
 
     public Ad(int author, byte[] image, int price, String title) {
